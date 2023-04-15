@@ -21,9 +21,18 @@ import EditStudent from
 import StudentList from
 	"./Components/student-list.component";
 
+import Login from "./Components/Login";
+import { AuthProvider } from "./Components/Auth";
+import { useAuth } from "./Components/Auth";
+import RequireAuth from "./Components/RequireAuth";
 // App Component
 const App = () => {
+	const auth = useAuth();
+	const handleLogout = () => {
+		auth.logout();
+	}
 return (
+	<AuthProvider>
 	<Router>
 	<div className="App">
 		<header className="App-header">
@@ -50,6 +59,16 @@ return (
 					Student List
 				</Link>
 				</Nav>
+				
+				
+					<Nav>
+						<Link to={"/login"}
+						className="nav-link" onClick={handleLogout}>
+							Logout
+						</Link>
+					</Nav>
+				
+
 			</Nav>
 			</Container>
 		</Navbar>
@@ -61,19 +80,25 @@ return (
 			<div className="wrapper">
 				<Routes>
 				<Route exact path='/'
-					element={<CreateStudent/>} />
+					element={<RequireAuth><CreateStudent/></RequireAuth>} />
 				<Route path="/create-student"
-					element={<CreateStudent/>} />
+					element={<RequireAuth><CreateStudent/></RequireAuth>} />
 				<Route path='/edit-student/:id'  element={<EditStudent/>} />
 				<Route path='/student-list'
-					element={<StudentList/>} />
+					element={<RequireAuth><StudentList/></RequireAuth>} />
+				
+				<Route path="/login"
+					element={<Login/>} />
+				
 				</Routes>
+				
 			</div>
 			</Col>
 		</Row>
 		</Container>
 	</div>
 	</Router>
+	</AuthProvider>
 );
 };
 
